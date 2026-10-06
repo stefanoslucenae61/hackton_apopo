@@ -19,3 +19,7 @@ bin-release/
 
 # Claude Code local settings (contains sensitive keys)
 .claude/settings.local.json
+.claude/msal-cache.bin
+
+# Local secrets
+chatbot/.env
