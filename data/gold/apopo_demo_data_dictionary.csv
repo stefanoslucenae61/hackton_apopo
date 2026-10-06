@@ -1,0 +1,30 @@
+column,description
+row_id,Row number in this demo file
+session_id,Evaluation-session identifier (several rats and rows share it)
+session_date,Date of the evaluation session
+session_start,Evaluation start (not an individual sniff timestamp)
+session_end,Evaluation end
+session_type,"Session description from the remarks, e.g. 'Discrimination 10 Holes 10 Bars'"
+configuration,"Cage setup, e.g. Line C"
+temperature_c,Room temperature in degrees Celsius
+rat,Rat evaluating the sample
+sample_id,"Sample identifier; a sample can be presented many times, also to several rats"
+patient_ref,Pseudonymised patient reference (not the original patient id)
+clinic,Partner clinic that supplied the sample
+sample_type,Sample container type (BigNewPot or Old pot)
+times_presented,Number of times this sample has been presented across sessions
+run,Sample bar / presentation block letter
+hole,Position within the run
+position,"Run letter + hole number, e.g. A1"
+sniff_time_ms,Recorded sniff duration in milliseconds
+sniff_time_s,Recorded sniff duration in seconds
+threshold_ms,Sniff-time threshold for this evaluation; a sniff at or above it is an indication
+rat_indicated,"True = the rat indicated the sample as suspect (a screening signal, not a diagnosis)"
+rewarded,True = a reward was recorded (a hit does not always give a reward)
+is_known_positive,Sample presented as a known positive (control)
+is_blind_positive,Clinic-positive sample presented as negative to avoid handler cues
+clinic_microscopy,"Partner clinic microscopy result: Negative, 1-19 AFB, or 1+/2+/3+ (categories, not concentrations)"
+clinic_genexpert,"Partner clinic GeneXpert result: Negative, Positive or Not tested"
+apopo_confirmation,"APOPO lab confirmation: Negative, Positive or Not tested (not tested is NOT negative)"
+reference_result,"Positive if clinic microscopy is positive, else Negative"
+outcome,"Rat indication vs. reference_result: True positive, False negative, False positive, True negative"

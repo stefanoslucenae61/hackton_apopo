@@ -1,0 +1,12 @@
+step,rows_remaining,rows_removed
+start (silver),204740,0
+1 sample type BigNewPot / Old pot,172338,32402
+2 evaluation threshold > 0,34607,137731
+3 0 < SniffTime <= 10 s,32278,2329
+4 HIT consistent with threshold,31904,374
+5 temperature > 0,26146,5758
+6 valid session start/end (1-60 min),25785,361
+7 operational session (no training/surrogate),14847,10938
+8 sample has no microscopy / GeneXpert conflict,14847,0
+9 sample is not a new case,14847,0
+10 no known-positive with clinic-negative result,14847,0
