@@ -1,19 +1,20 @@
 # Clarifying Questions — APOPO PoC
+
 _Raised by Parci (PM) on Day 2 morning. Julie replied 07/10/2026._
 
 ---
 
 ## Julie's Answers (07/10/2026)
 
-| # | Question | Answer | Impact on plan |
-|---|----------|--------|----------------|
-| 9 | Exact deadline | **1 January 2027** — old LIMS read-only max 3 months after go-live, then gone | Horizon 1 must complete in ~12 weeks |
-| 10 | Source system preservation | Old tool decommissioned after go-live (max 3 months read-only). Original raw exports must be archived, unchanged, readable — FDA requirement | Archived read-only source copy is a hard deliverable, not optional |
-| 12 | Study continuity | **Study cannot stop** — rats screen every working day including December | Zero-downtime is non-negotiable; must be in KPI commitment |
-| 13 | FDA audit trail | **Hard constraint**: every field mapping must be human-approved and documented (field mapped, approver name, timestamp). Vendor's test migration was never row-verified. | Agentic migration must include human-in-the-loop approval layer + full immutable audit log |
-| Migration preference | — | Julie: greenfield (redesign properly). Pieter: no downtime, no paying twice. Both want the trade-off shown — cost, duration, risk per option | Present all three options with explicit trade-off table; don't just recommend one |
+| #                    | Question                   | Answer                                                                                                                                                                   | Impact on plan                                                                             |
+| -------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| 9                    | Exact deadline             | **1 January 2027** — old LIMS read-only max 3 months after go-live, then gone                                                                                            | Horizon 1 must complete in ~12 weeks                                                       |
+| 10                   | Source system preservation | Old tool decommissioned after go-live (max 3 months read-only). Original raw exports must be archived, unchanged, readable — FDA requirement                             | Archived read-only source copy is a hard deliverable, not optional                         |
+| 12                   | Study continuity           | **Study cannot stop** — rats screen every working day including December                                                                                                 | Zero-downtime is non-negotiable; must be in KPI commitment                                 |
+| 13                   | FDA audit trail            | **Hard constraint**: every field mapping must be human-approved and documented (field mapped, approver name, timestamp). Vendor's test migration was never row-verified. | Agentic migration must include human-in-the-loop approval layer + full immutable audit log |
+| Migration preference | —                          | Julie: greenfield (redesign properly). Pieter: no downtime, no paying twice. Both want the trade-off shown — cost, duration, risk per option                             | Present all three options with explicit trade-off table; don't just recommend one          |
 
-**Key quote from Julie:** *"We must be able to prove to the FDA that no record was lost or changed."*
+**Key quote from Julie:** _"We must be able to prove to the FDA that no record was lost or changed."_
 
 ---
 
@@ -21,13 +22,13 @@ _Raised by Parci (PM) on Day 2 morning. Julie replied 07/10/2026._
 
 ### Data & Technical
 
-1. **What is the new LIMS system?** Vendor, version, target data model. We can't design the migration without knowing what we're migrating *to*.
-2. **Is `lab_result` the confirmed gold standard**, or can clinic results override it in some cases? This directly affects how we calculate accuracy.
-3. **`room_temp_c` shows 0.0 in many records** — is zero a valid temperature or a missing value sentinel? Same question for zero `indication_threshold_s`.
-4. **`specimen_type` is empty in all rows we've seen** — is this expected, and does it affect which threshold or protocol applies?
-5. **What links rat session records to lab confirmation records?** Is `specimen_id` the reliable join key, or does it break across systems?
-6. **How many data sources exist in total?** We've seen the AutomatedCage export and the LIMS export — are there others (e.g. a national TB register, partner clinic systems)?
-7. **What is a "reuse count" for a sample**, and does it affect how we interpret indication results?
+1. **What is the new LIMS system?** Vendor, version, target data model. We can't design the migration without knowing what we're migrating _to_.
+
+2. **`room_temp_c` shows 0.0 in many records** — is zero a valid temperature or a missing value sentinel? Same question for zero `indication_threshold_s`. Do we leave them out?
+3. **`specimen_type` is empty in all rows we've seen** — is this expected, and does it affect which threshold or protocol applies?
+4. **What links rat session records to lab confirmation records?** Is `specimen_id` the reliable join key, or does it break across systems?
+5. **How many data sources exist in total?** We've seen the AutomatedCage export and the LIMS export — are there others (e.g. a national TB register, partner clinic systems)?
+6. **What is a "reuse count" for a sample**, and does it affect how we interpret indication results?
 
 ### Source System Ownership
 
@@ -63,11 +64,11 @@ _Raised by Parci (PM) on Day 2 morning. Julie replied 07/10/2026._
 
 ## Updated Priority (blockers for today's board presentation)
 
-| # | Question | Why it's a blocker |
-|---|----------|--------------------|
-| 1 | New LIMS system | Can't design migration target without it |
-| 2 | Gold standard for accuracy | Affects every KPI we present |
-| 8 | Source system ownership | Vendor lock-in could kill the Jan 1 timeline |
-| 14 | How 95% is calculated | Board will ask — we need to know if we can stand behind it |
+| #   | Question                   | Why it's a blocker                                         |
+| --- | -------------------------- | ---------------------------------------------------------- |
+| 1   | New LIMS system            | Can't design migration target without it                   |
+| 2   | Gold standard for accuracy | Affects every KPI we present                               |
+| 8   | Source system ownership    | Vendor lock-in could kill the Jan 1 timeline               |
+| 14  | How 95% is calculated      | Board will ask — we need to know if we can stand behind it |
 
 _Questions 9, 10, 12, 13 are now answered and absorbed into the plan._

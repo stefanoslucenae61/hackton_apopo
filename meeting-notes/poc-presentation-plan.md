@@ -1,7 +1,14 @@
 # POC Presentation Plan — APOPO × element61
-**Audience:** Pieter (Head of Training & Research) + likely CEO  
-**Format:** Board-ready, 5–7 slides. Situation → Complication → Resolution → Ask  
-**Constraint:** Must stand alone — Pieter presents this to the board without element61 in the room
+**Audience:** Pieter (Head of Training & Research) + likely CEO
+**Format:** Board-ready, 5–7 slides. Situation → Complication → Resolution → Ask
+**Constraint:** Must stand alone — Pieter presents to the board without element61 in the room
+**Action item:** Book follow-up meeting with Julie before presentation
+
+---
+
+## The One-Sentence Pitch
+
+> APOPO is 3% away from FDA approval and has a hard deadline of 1 January 2027. The answer is in their data — but today there are two systems, neither trusted, and no reconciled source of truth. If the board doesn't decide today, the migration cannot happen in time.
 
 ---
 
@@ -9,36 +16,33 @@
 
 ```mermaid
 flowchart TD
-    subgraph SOURCES["Data Sources (Today)"]
-        RS[("Rat Session Data\nSniff times · Thresholds")]
-        LIMS[("Legacy LIMS\nLab results · Clinic results")]
+    subgraph SOURCES["Two Sources of Truth (Today — the problem)"]
         CAGE[("AutomatedCage\nRaw session logs")]
+        LIMS[("Legacy LIMS\nLab + clinic results")]
     end
 
-    subgraph DQ["Data Quality Gap"]
-        direction TB
-        DQ1["Missing lab_result\n(clinic+ but unconfirmed)"]
-        DQ2["Zero / null thresholds\n(which rule applies?)"]
-        DQ3["Zero temperatures\n(integrity flag)"]
-        DQ4["Indication ≠ Rewarded\n(conflicting signals)"]
+    subgraph DQ["No reconciliation between them"]
+        DQ1["Missing lab confirmations"]
+        DQ2["Conflicting thresholds"]
+        DQ3["Data integrity flags"]
+        DQ4["No single trusted record"]
     end
 
     subgraph MIGRATE["Agentic Migration — Horizon 1"]
-        AI["AI Reconciliation Engine\nFlags · Proposes fixes · Audit trail"]
-        ANALYST["Julie reviews\nAI confirms, not re-does"]
-        CLEAN[("Clean Data Foundation\nAudit-proof · Reconciled · Single source")]
+        AI["AI Reconciliation Engine\nBulk mapping · Flags edge cases"]
+        ANALYST["Julie approves every mapping\nFull audit log: field · approver · timestamp"]
+        CLEAN[("ONE Source of Truth\nAudit-proof · FDA-compliant · Reconciled")]
     end
 
-    subgraph OUTPUTS["Capabilities Unlocked"]
-        direction TB
-        CHATBOT["AI Chatbot\nSelf-service queries\nfor researchers & auditors"]
+    subgraph OUTPUTS["What it unlocks"]
+        CHATBOT["AI Chatbot\nReliable answers for researchers & auditors"]
         REPORT["Board Reporting\nCost per case · Trends · KPIs"]
-        H2["Horizon 2 — Insight\nDonor & audit reports\nin hours, not days"]
-        H3["Horizon 3 — Intelligence\nRejection threshold tuning\nCommittee of rats → 98% accuracy"]
+        H2["Horizon 2 — Insight\nSelf-service reporting in hours, not days"]
+        H3["Horizon 3 — Intelligence\nPath to 98% FDA accuracy"]
     end
 
     SOURCES --> DQ
-    DQ -->|"Today: chatbot can't\nanswer reliably"| AI
+    DQ -->|"Today: no one can prove\nthe 95% claim"| AI
     AI --> ANALYST
     ANALYST --> CLEAN
     CLEAN --> CHATBOT
@@ -46,8 +50,8 @@ flowchart TD
     CLEAN --> H2
     H2 --> H3
 
-    style SOURCES fill:#f5f5f5,stroke:#bbb
-    style DQ fill:#fff3cd,stroke:#f0ad4e
+    style SOURCES fill:#fff3cd,stroke:#f0ad4e
+    style DQ fill:#f8d7da,stroke:#dc3545
     style MIGRATE fill:#d4edda,stroke:#28a745
     style OUTPUTS fill:#cce5ff,stroke:#004085
     style CLEAN fill:#28a745,color:#fff,stroke:#1e7e34
@@ -55,152 +59,138 @@ flowchart TD
 
 ---
 
-## The One-Sentence Pitch
-
-> APOPO is 3% away from FDA approval. The answer is already in their data — but the data isn't clean enough to use it. element61 can fix that, and prove it saves money.
-
----
-
 ## Slide Structure
 
 ### Slide 1 — Situation
-**"APOPO saves lives at scale — but is 3% short of its next milestone."**
-- 95% accuracy today. FDA requires 98%. The gap costs patients and donor credibility.
-- APOPO has years of historical rat + lab data that has never been systematically analysed.
-- The data is there. The infrastructure to use it isn't.
-
-### Slide 2 — Complication
-**"The data quality problem is costing APOPO every day — in money and in missed cases."**
-- From the actual data (`T1_NewLIMS_Export.csv`): show concrete DQ issues
-  - Missing lab results (clinic_result populated, lab_result empty)
-  - Zero temperatures recorded during sessions (data integrity flag)
-  - Missing or zero indication thresholds (which threshold applies?)
-  - Conflicting rat indications vs. rewarded outcomes
-- Quantify: X% of records have at least one quality issue → translates to Y sessions where accuracy cannot be reliably calculated
-- Headline: **"Every day without clean data, APOPO cannot know if its 95% claim is accurate"**
-
-### Slide 3 — Insight (the chatbot demo goes here)
-**"We asked your data a question. It couldn't answer — and showed us why."**
-- Live demo: use the AI chatbot to ask business questions the board actually cares about:
-  - *"Which rats have the highest false-negative rate this year?"*
-  - *"What is the cost per confirmed TB case detected by rats vs. lab alone?"*
-  - *"Which sessions should be flagged for quality review?"*
-- Show that the chatbot surfaces data gaps in real-time — it doesn't make things up, it tells you what it can't answer and why.
-- Flip it: show one question it *can* answer cleanly, and what that answer means for the business.
-- Parci's framing: not a shiny demo — a mirror showing APOPO what clean data would unlock.
-
-### Slide 4 — Resolution
-**"Three options. One recommendation. All with a price tag and a risk score."**
-
-Present the trade-off table Julie explicitly asked for — not just a recommendation:
-
-| Option | Approach | Duration | Study risk | FDA audit-proof | Cost (est.) |
-|--------|----------|----------|------------|-----------------|-------------|
-| **S — Lift & shift** | Copy data as-is into new LIMS, clean later | 4–6 weeks | Low (fast) | No — dirty data follows you | Low |
-| **M — Greenfield** | Design clean model, reconcile manually row by row | 16–20 weeks | High (misses Jan 1) | Yes — but slow | High |
-| **L — Agentic** | Greenfield model + AI does bulk mapping; Julie approves every mapping before use, all decisions logged | 10–12 weeks | Medium | **Yes** — human stays in control, full audit trail | Medium |
-
-**Recommended: Option L — Agentic migration**
-- Hits the January 1 deadline
-- Every field mapping reviewed and approved by Julie before it goes live
-- Every decision logged: which field mapped where, who approved, when — FDA can see the full chain
-- Archived read-only copy of original source exports preserved unchanged (FDA study requirement)
-- Same AI that maps the data powers the chatbot — one investment, two outputs
-
-**Non-negotiables from APOPO (build into the contract):**
-- Zero study downtime — rats screen every working day including December
-- No record lost or changed without a documented, human-approved reason
-- Original raw exports archived and readable indefinitely
-
-### Slide 5a — Maturity Snapshot (Goal 4)
-**"Here is where APOPO stands today — honestly."**
-
-| Dimension | Today | What's missing |
-|-----------|-------|----------------|
-| **Data** | Multiple siloed sources (AutomatedCage, legacy LIMS, clinic exports). No single source of truth. Records not reconciled. | Unified, audit-proof data model |
-| **Reporting** | Manual, ad-hoc. No self-service. Board and donor reports built by hand. | Automated, audience-specific reporting |
-| **AI** | None in production. PoC chatbot built this week — shows what's possible and where data blocks it. | Reliable AI requiring clean foundation first |
-
-Framing for the board: *"This is not a criticism — it's a baseline. Every organisation starts here. The question is what it costs to stay here vs. move forward."*
+**"APOPO saves lives — but is 3% short of FDA approval and the clock is running."**
+- Rats screen TB samples every working day. 95% accuracy today. FDA requires 98%.
+- The gap can be closed — the historical data is there. But it has never been systematically used.
+- The board has a concrete decision to make today. Not next month. Today.
 
 ---
 
-### Slide 5b — Roadmap (Goal 4)
-**"Three horizons. One decision unlocks the next. You set the pace."**
+### Slide 2 — Complication
+**"Two systems. Neither trusted. No single source of truth."**
+- APOPO runs two separate data systems that have never been reconciled:
+  - **AutomatedCage** — raw rat session logs (sniff times, indication, threshold)
+  - **Legacy LIMS** — lab and clinic results
+- They don't agree. Nobody has checked row by row. The vendor's own test migration was accepted — but not verified.
+- Concrete evidence from the data:
+  - Missing lab confirmations on clinic-positive samples
+  - Zero or missing indication thresholds
+  - Conflicting rat indications vs. rewarded outcomes
+- **Headline: APOPO cannot today prove its 95% claim to the FDA — because the data that would prove it isn't reconciled.**
+
+---
+
+### Slide 3 — Insight (chatbot demo)
+**"We asked your data a question. It couldn't answer — and showed us exactly why."**
+- Live demo: ask the chatbot a question the board cares about:
+  - *"How many TB-positive patients did the rats catch that the clinic missed?"*
+- Chatbot surfaces a data quality warning in real time: *"lab_result is missing for X% of clinic-positive records — this number may be understated."*
+- **Pause. That warning is the pitch.**
+- Then flip it: show what the answer becomes once data is clean — the upper-bound impact.
+- Translate to patients detected, cost per case saved.
+
+---
+
+### Slide 4 — Resolution
+**"Three options. One fits the deadline. All three are on the table."**
+
+Present the trade-off — Julie asked for this explicitly:
+
+| Option | Approach | Weeks to Jan 1 | Study risk | FDA audit-proof | Cost |
+|--------|----------|----------------|------------|-----------------|------|
+| **S — Lift & shift** | Copy as-is, clean later | 4–6 w ✓ | Low | No — dirty data moves with you | X days |
+| **M — Greenfield** | Redesign + manual reconciliation | 16–20 w ✗ | High (misses deadline) | Yes | X days |
+| **L — Agentic** | Redesign + AI bulk mapping, Julie approves every mapping, full audit log | 10–12 w ✓ | Medium | **Yes** | X days |
+
+**Recommendation: Option L**
+- Only option that hits January 1 *and* gives APOPO an FDA-defensible audit trail
+- Every field mapping: reviewed by Julie, logged (field · approver · timestamp) before it goes live
+- Original raw exports archived unchanged — always retrievable, independent of LIMS
+- Same AI powers the chatbot: one investment, two outputs
+- Rats keep screening every day — zero study downtime
+
+---
+
+### Slide 5 — Roadmap
+**"Two paths forward. You choose. But the choice has to be today."**
 
 ```mermaid
 gantt
-    title APOPO × element61 Roadmap
+    title Happy Path vs Unhappy Path
     dateFormat  YYYY-MM-DD
-    section Horizon 1 · Foundation (hard deadline: 1 Jan 2027)
-    Agentic migration & data model     :h1a, 2026-10-08, 7w
-    Human approval & audit log         :h1b, 2026-10-08, 11w
-    Chatbot production-ready           :h1c, 2026-11-15, 4w
-    Audit-proof KPI baseline           :h1d, 2026-12-01, 4w
+    section Happy Path (decision today)
+    Kick-off & source access           :h1a, 2026-10-08, 1w
+    Agentic migration + audit log      :h1b, 2026-10-15, 7w
+    Julie review & sign-off            :h1c, 2026-11-15, 3w
+    Chatbot + KPI baseline             :h1d, 2026-12-01, 4w
     DEADLINE — new LIMS go-live        :milestone, 2027-01-01, 0d
     Old LIMS read-only fallback        :h1e, 2027-01-01, 12w
-    section Horizon 2 · Insight
-    Self-service reporting (Power BI)  :h2a, 2027-01-15, 12w
-    Donor & audit report automation    :h2b, 2027-02-15, 12w
-    section Horizon 3 · Intelligence
-    Rejection threshold optimisation   :h3a, 2027-07-01, 12w
-    Committee of rats analysis         :h3b, 2027-08-01, 12w
-    Path to 98% accuracy (FDA)         :h3c, 2027-09-01, 12w
+    section Unhappy Path (decision delayed)
+    Every week of delay shifts deadline:crit, delay, 2026-10-08, 4w
+    Migration window too short         :crit, 2026-11-01, 8w
+    LIMS goes live with unverified data:milestone, crit, 2027-01-01, 0d
+    FDA audit risk                     :crit, 2027-01-01, 12w
 ```
 
-| Horizon | Name | What the board gets | Timeline | CAPEX (est.) | OPEX / month |
-|---------|------|---------------------|----------|--------------|--------------|
-| **1** | **Foundation** | Trusted data. Chatbot answers reliably. KPIs the board can stand behind. | Oct – Dec 2026 | €15k – €25k | €500 – €1k |
-| **2** | **Insight** | Self-service reporting for researchers, auditors, donors. Reports in hours, not days. | Jan – Jun 2027 | €20k – €35k | €1k – €2k |
-| **3** | **Intelligence** | AI-driven accuracy improvement. Rejection threshold tuning. Committee of rats. Path to FDA 98%. | Jul 2027 – Mar 2028 | €30k – €50k | €2k – €3.5k |
+**Happy path:** Decision today → kick-off this week → migration done by mid-December → KPIs validated → new LIMS goes live clean on 1 January.
 
-**Contingency — what if we're not ready by 1 January?** *(Julie explicitly asked for this)*
-- Old LIMS stays read-only for max 3 months post go-live — this is the fallback window
-- In that window: study continues on new LIMS; old LIMS used only to retrieve historical records
-- Risk: if migration is not validated by 1 April, APOPO loses access to pre-migration data
-- Mitigation: archived source exports mean original records are always retrievable, independent of LIMS availability
-
-**Visible assumptions (state these explicitly):**
-- Horizon 1 CAPEX assumes source system access is available within 2 weeks of sign-off and source system is not vendor-locked *(open question — see clarifying questions #8)*
-- OPEX is cloud compute + storage only; element61 support billed separately if ongoing
-- Horizon 1 timeline assumes the December deadline is end of December; shifts if earlier
-- Costs are ranges — lower bound assumes clean handover of data and clear requirements; upper bound covers ambiguity and rework
-- Horizons 2 and 3 are indicative; scoped in detail after Horizon 1 delivers
-
-**3-year total cost of ownership (indicative):**
-- Low scenario: €65k CAPEX + €54k OPEX = **~€120k over 3 years**
-- High scenario: €110k CAPEX + €126k OPEX = **~€235k over 3 years**
-- Cost of *not* acting: every year without clean data = Julie's time on fire-fighting + unverifiable 95% claim + donor risk
-
-### Slide 6 — The Ask
-**"One decision today unlocks everything else."**
-- Decision: approve Horizon 1 (Foundation) as a fixed-scope, fixed-price engagement.
-- What APOPO commits: data access, Julie's time for questions, confirmation of approved tools.
-- What element61 commits: clean data, working chatbot, reproducible KPIs — by December.
-- Price: [T-shirt size from roadmap].
-- Next step: sign-off → kick-off within 2 weeks.
+**Unhappy path:** Every week of delay compresses the migration window. At 4 weeks delay, Option L is no longer feasible. APOPO either goes live with unverified data (FDA risk) or misses the go-live date (study risk).
 
 ---
 
-## Demo Script (Chatbot)
+### Slide 6 — Maturity & Cost
+**"Where you stand today. What it costs to move. What it costs to stay."**
 
-The chatbot demo in Slide 3 should follow this flow — rehearse it:
+| Dimension | Today | After Horizon 1 |
+|-----------|-------|-----------------|
+| **Data** | Two unreconciled systems, no single source of truth | One audit-proof source of truth, FDA-defensible |
+| **Reporting** | Manual, ad-hoc, built by hand | Automated KPI baseline; chatbot for self-service |
+| **AI** | None in production | Working chatbot on clean data |
 
-1. Ask a question the board cares about: *"How many TB-positive patients did the rats catch that the clinic missed this year?"*
-2. The chatbot runs the query, returns an answer **with a confidence flag** — and surfaces a data quality warning (e.g. "lab_result is missing for 23% of clinic-positive records — this number may be understated").
-3. Pause. Let that land. That warning *is* the pitch.
-4. Then ask: *"If we fix that 23%, what does the number become?"* — show the upper-bound estimate.
-5. Translate to impact: extra TB cases detected → patients treated → cost per case.
+**Cost framing** *(ranges — final scoping after source system confirmed)*:
+
+| Horizon | What it delivers | One-off (CAPEX) | Monthly (OPEX) |
+|---------|-----------------|-----------------|----------------|
+| 1 — Foundation | Clean data + chatbot + audit trail by Jan 1 | X days | €500–€1k |
+| 2 — Insight | Self-service reporting for researchers, donors, auditors | X days | €1k–€2k |
+| 3 — Intelligence | Accuracy improvement → path to 98% FDA | X days | €2k–€3.5k |
+
+**Cost of staying still:** Julie's time on manual fire-fighting + unverifiable 95% claim + FDA exposure + donor trust at risk. Every month without clean data is a month of compounding technical debt.
+
+---
+
+### Slide 7 — The Ask
+**"One decision. Today. Everything else follows."**
+
+> **If the board approves Horizon 1 today, element61 can kick off this week and hit the 1 January deadline. If not, the window closes.**
+
+- **Decision:** approve Horizon 1 (agentic migration + chatbot + audit trail) as a fixed-scope engagement
+- **What APOPO commits:** source system access this week, Julie's time for mapping approvals, confirmation of approved tools
+- **What element61 commits:** one reconciled source of truth, working chatbot, FDA-defensible audit log — delivered by 1 January
+- **Next step:** sign today → kick-off call tomorrow
+
+---
+
+## Demo Script (Chatbot — Slide 3)
+
+1. Ask: *"How many TB-positive patients did the rats catch that the clinic missed this year?"*
+2. Chatbot returns answer with confidence flag + data quality warning (e.g. missing lab results for X% of records)
+3. **Stop. Let the warning land.** "This is what dirty data looks like in practice."
+4. Ask: *"If we fix that, what's the upper bound?"* — show the range.
+5. Translate: extra patients detected → lives → cost per case saved.
 
 ---
 
 ## What to Prepare Before the Presentation
 
-- [ ] Run data quality analysis on `T1_NewLIMS_Export.csv` — compute exact % of records with DQ issues (missing lab_result, zero temp, zero threshold, mismatched indication/rewarded)
-- [ ] Build 2–3 chatbot demo questions that hit the data quality gap cleanly
-- [ ] Compute a rough "cost of dirty data" metric: sessions where accuracy is unverifiable × cost per session
-- [ ] Prepare migration template comparison (S/M/L) with effort ranges in man-days
-- [ ] Validate slide titles with Pieter before 16:00 on Day 1
+- [ ] Run data quality analysis on `T1_NewLIMS_Export.csv` — exact % DQ issues per dimension
+- [ ] Replace all "X days" with actual T-shirt estimates once source system is confirmed
+- [ ] Build 2–3 chatbot demo questions that expose the data quality gap cleanly
+- [ ] Book follow-up meeting with Julie
+- [ ] Validate slide flow with Pieter before 15:00
 
 ---
 
@@ -208,7 +198,8 @@ The chatbot demo in Slide 3 should follow this flow — rehearse it:
 
 | Objection | Response |
 |-----------|----------|
-| "We already have 95% accuracy — why invest now?" | Because you can't prove it from your current data. And the 3% gap to FDA costs more to close the longer you wait. |
-| "This sounds expensive." | Horizon 1 is €15k–€25k, runs at €500–€1k/month. The cost of one missed TB case — clinically and reputationally — is orders of magnitude higher. |
-| "Can't we just fix the data ourselves?" | Julie knows the data; she shouldn't spend her time on ETL. Agentic migration does it faster, with an audit trail, and frees her for research. |
-| "What if the migration breaks something?" | That's the point of the PoC: we've already run your data and shown what breaks. Horizon 1 fixes it with zero study downtime as a KPI. |
+| "We already have 95% — why act now?" | You can't prove it from current data. And the deadline is January 1. There is no later. |
+| "This sounds expensive." | Horizon 1 runs at €500–€1k/month. The cost of missed FDA audit or a failed LIMS go-live is orders of magnitude higher. |
+| "Can't we just do lift-and-shift?" | You can — but you take the dirty data with you. The FDA will see an unverified migration. Julie has already said that's not acceptable. |
+| "What if we're not ready by January 1?" | Old LIMS stays read-only for 3 months max. That's the fallback. But original source exports are always archived — records are never lost. |
+| "Can't Julie fix the data herself?" | Julie knows the data — she shouldn't spend December on ETL. The AI does the bulk; she approves the edge cases. That's the right use of her time. |
