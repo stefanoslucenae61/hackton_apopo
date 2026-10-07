@@ -1,0 +1,7 @@
+streamlit
+openai
+altair
+pandas
+python-dotenv
+sqlalchemy
+azure-identity

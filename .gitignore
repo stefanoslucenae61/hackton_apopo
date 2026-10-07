@@ -3,6 +3,28 @@
 .env.*
 !.env.example
 
+# Other files and folders
+.settings/
+
+# Executables
+*.swf
+*.air
+*.ipa
+*.apk
+
+# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
+# should NOT be excluded as they contain compiler settings and other important
+# information for Eclipse / Flash Builder.
+
+# Claude Code local settings (contains sensitive keys)
+.claude/settings.local.json
+.claude/msal-cache.bin
+
+# Local secrets
+chatbot/.env
+
+# Temp Office lock files
+~$*
 # Claude Code files
 .claude/
 CLAUDE.md
