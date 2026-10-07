@@ -1,9 +1,25 @@
 # Clarifying Questions — APOPO PoC
-_Raised by Parci (PM) on Day 2 morning. Filter and send before stand-up._
+_Raised by Parci (PM) on Day 2 morning. Julie replied 07/10/2026._
 
 ---
 
-## Data & Technical
+## Julie's Answers (07/10/2026)
+
+| # | Question | Answer | Impact on plan |
+|---|----------|--------|----------------|
+| 9 | Exact deadline | **1 January 2027** — old LIMS read-only max 3 months after go-live, then gone | Horizon 1 must complete in ~12 weeks |
+| 10 | Source system preservation | Old tool decommissioned after go-live (max 3 months read-only). Original raw exports must be archived, unchanged, readable — FDA requirement | Archived read-only source copy is a hard deliverable, not optional |
+| 12 | Study continuity | **Study cannot stop** — rats screen every working day including December | Zero-downtime is non-negotiable; must be in KPI commitment |
+| 13 | FDA audit trail | **Hard constraint**: every field mapping must be human-approved and documented (field mapped, approver name, timestamp). Vendor's test migration was never row-verified. | Agentic migration must include human-in-the-loop approval layer + full immutable audit log |
+| Migration preference | — | Julie: greenfield (redesign properly). Pieter: no downtime, no paying twice. Both want the trade-off shown — cost, duration, risk per option | Present all three options with explicit trade-off table; don't just recommend one |
+
+**Key quote from Julie:** *"We must be able to prove to the FDA that no record was lost or changed."*
+
+---
+
+## Still Open
+
+### Data & Technical
 
 1. **What is the new LIMS system?** Vendor, version, target data model. We can't design the migration without knowing what we're migrating *to*.
 2. **Is `lab_result` the confirmed gold standard**, or can clinic results override it in some cases? This directly affects how we calculate accuracy.
@@ -13,59 +29,45 @@ _Raised by Parci (PM) on Day 2 morning. Filter and send before stand-up._
 6. **How many data sources exist in total?** We've seen the AutomatedCage export and the LIMS export — are there others (e.g. a national TB register, partner clinic systems)?
 7. **What is a "reuse count" for a sample**, and does it affect how we interpret indication results?
 
----
-
-## Source System Ownership
+### Source System Ownership
 
 8. **Who owns the source system?**
    - Is the current LIMS a third-party vendor product, or built/maintained internally by APOPO?
    - If vendor-owned: do we need their cooperation to extract data, and is there a contract or API that governs access?
-   - If internally owned: who is the technical owner — Julie, an IT team, or someone else we haven't spoken to?
-   - Who has the authority to approve decommissioning the source system after migration?
+   - Who has the authority to approve decommissioning?
 
----
+### Migration & Scope
 
-## Migration & Scope
-
-9. **Exact December deadline?** Day matters for timeline and T-shirt sizing.
-10. **Source system preservation:** after migration, does the old LIMS stay live in parallel, or is it decommissioned? This changes the rollback strategy entirely.
 11. **Who owns the migration decision on APOPO's side** — Pieter, IT, or both? Is there an IT team we haven't spoken to?
-12. **Can APOPO pause new session data entry during the migration window**, or does data need to keep flowing while we migrate? Zero-downtime has a very different cost if sessions run daily.
-13. **Are there regulatory or donor audit requirements around data lineage** — e.g. must every record have a traceable origin from source to target?
 
----
-
-## Accuracy & Detection
+### Accuracy & Detection
 
 14. **How is the 95% accuracy figure currently calculated?** Internally by APOPO, or externally validated? Sensitivity only, or balanced with specificity?
-15. **Is the FDA 98% requirement specifically for sensitivity** (catching true positives), or overall accuracy? These lead to very different optimisation strategies.
-16. **Which rats are currently active and operational?** Are there rats with known performance issues already excluded from the 95% claim?
+15. **Is the FDA 98% requirement specifically for sensitivity**, or overall accuracy?
+16. **Which rats are currently active and operational?** Any with known performance issues already excluded from the 95% claim?
 17. **What is the defined follow-up protocol when a rat flags a sample?** Does it always go to lab confirmation, or only sometimes?
 
----
-
-## Reporting & Stakeholders
+### Reporting & Stakeholders
 
 18. **What does current reporting look like?** Manual Excel, LIMS-generated reports, something else? Who produces it and how long does it take?
 19. **Who are the specific donors APOPO reports to, and what format do they require?** This scopes Horizon 2.
-20. **Are there external auditors**, and if so, what do they need — raw data exports, summary reports, or access to a live system?
+20. **Are there external auditors**, and if so, what do they need?
 
----
-
-## Budget & Roadmap
+### Budget & Roadmap
 
 21. **Is the €1,000/month ceiling for Horizon 1 compute costs only**, or does it include element61 support?
 22. **Is there budget headroom for Horizons 2 and 3**, or is the board deciding on the full three-horizon commitment today?
-23. **Who maintains the solution after delivery** — APOPO's own team (Julie?), or is ongoing element61 support expected?
+23. **Who maintains the solution after delivery** — Julie's team or ongoing element61 support?
 
 ---
 
-## Priority (blockers for today's presentation)
+## Updated Priority (blockers for today's board presentation)
 
 | # | Question | Why it's a blocker |
 |---|----------|--------------------|
 | 1 | New LIMS system | Can't design migration target without it |
 | 2 | Gold standard for accuracy | Affects every KPI we present |
-| 8 | Source system ownership | Vendor lock-in could kill the migration timeline |
-| 9 | Exact December date | Determines feasibility of each horizon |
+| 8 | Source system ownership | Vendor lock-in could kill the Jan 1 timeline |
 | 14 | How 95% is calculated | Board will ask — we need to know if we can stand behind it |
+
+_Questions 9, 10, 12, 13 are now answered and absorbed into the plan._

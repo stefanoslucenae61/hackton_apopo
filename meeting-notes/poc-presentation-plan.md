@@ -90,13 +90,27 @@ flowchart TD
 - Parci's framing: not a shiny demo — a mirror showing APOPO what clean data would unlock.
 
 ### Slide 4 — Resolution
-**"Clean data + agentic migration = 20% fewer errors by December, at a known cost."**
-- Three migration options (T-shirt sizing):
-  - **S — Lift & shift**: move data as-is, clean later. Fast. Fragile.
-  - **M — Greenfield + reconcile**: build a clean model alongside, reconcile records. Slower. Trustworthy.
-  - **L — Agentic migration**: AI cleans, reconciles, and validates records *during* migration. Faster than M, more reliable than S. **Recommended.**
-- Agentic migration differentiator: the same AI that powers the chatbot also flags and proposes fixes for dirty records — analysts confirm, not re-do.
-- KPI commitment: 100% records reconciled, identical KPIs before and after, zero study downtime.
+**"Three options. One recommendation. All with a price tag and a risk score."**
+
+Present the trade-off table Julie explicitly asked for — not just a recommendation:
+
+| Option | Approach | Duration | Study risk | FDA audit-proof | Cost (est.) |
+|--------|----------|----------|------------|-----------------|-------------|
+| **S — Lift & shift** | Copy data as-is into new LIMS, clean later | 4–6 weeks | Low (fast) | No — dirty data follows you | Low |
+| **M — Greenfield** | Design clean model, reconcile manually row by row | 16–20 weeks | High (misses Jan 1) | Yes — but slow | High |
+| **L — Agentic** | Greenfield model + AI does bulk mapping; Julie approves every mapping before use, all decisions logged | 10–12 weeks | Medium | **Yes** — human stays in control, full audit trail | Medium |
+
+**Recommended: Option L — Agentic migration**
+- Hits the January 1 deadline
+- Every field mapping reviewed and approved by Julie before it goes live
+- Every decision logged: which field mapped where, who approved, when — FDA can see the full chain
+- Archived read-only copy of original source exports preserved unchanged (FDA study requirement)
+- Same AI that maps the data powers the chatbot — one investment, two outputs
+
+**Non-negotiables from APOPO (build into the contract):**
+- Zero study downtime — rats screen every working day including December
+- No record lost or changed without a documented, human-approved reason
+- Original raw exports archived and readable indefinitely
 
 ### Slide 5a — Maturity Snapshot (Goal 4)
 **"Here is where APOPO stands today — honestly."**
@@ -117,18 +131,21 @@ Framing for the board: *"This is not a criticism — it's a baseline. Every orga
 ```mermaid
 gantt
     title APOPO × element61 Roadmap
-    dateFormat  YYYY-MM
-    section Horizon 1 · Foundation
-    Agentic migration & data model     :h1a, 2026-10, 2m
-    Chatbot production-ready           :h1b, 2026-11, 1m
-    Audit-proof KPI baseline           :h1c, 2026-11, 1m
+    dateFormat  YYYY-MM-DD
+    section Horizon 1 · Foundation (hard deadline: 1 Jan 2027)
+    Agentic migration & data model     :h1a, 2026-10-08, 7w
+    Human approval & audit log         :h1b, 2026-10-08, 11w
+    Chatbot production-ready           :h1c, 2026-11-15, 4w
+    Audit-proof KPI baseline           :h1d, 2026-12-01, 4w
+    DEADLINE — new LIMS go-live        :milestone, 2027-01-01, 0d
+    Old LIMS read-only fallback        :h1e, 2027-01-01, 12w
     section Horizon 2 · Insight
-    Self-service reporting (Power BI)  :h2a, 2027-01, 3m
-    Donor & audit report automation    :h2b, 2027-02, 3m
+    Self-service reporting (Power BI)  :h2a, 2027-01-15, 12w
+    Donor & audit report automation    :h2b, 2027-02-15, 12w
     section Horizon 3 · Intelligence
-    Rejection threshold optimisation   :h3a, 2027-07, 3m
-    Committee of rats analysis         :h3b, 2027-08, 3m
-    Path to 98% accuracy (FDA)         :h3c, 2027-09, 3m
+    Rejection threshold optimisation   :h3a, 2027-07-01, 12w
+    Committee of rats analysis         :h3b, 2027-08-01, 12w
+    Path to 98% accuracy (FDA)         :h3c, 2027-09-01, 12w
 ```
 
 | Horizon | Name | What the board gets | Timeline | CAPEX (est.) | OPEX / month |
@@ -136,6 +153,12 @@ gantt
 | **1** | **Foundation** | Trusted data. Chatbot answers reliably. KPIs the board can stand behind. | Oct – Dec 2026 | €15k – €25k | €500 – €1k |
 | **2** | **Insight** | Self-service reporting for researchers, auditors, donors. Reports in hours, not days. | Jan – Jun 2027 | €20k – €35k | €1k – €2k |
 | **3** | **Intelligence** | AI-driven accuracy improvement. Rejection threshold tuning. Committee of rats. Path to FDA 98%. | Jul 2027 – Mar 2028 | €30k – €50k | €2k – €3.5k |
+
+**Contingency — what if we're not ready by 1 January?** *(Julie explicitly asked for this)*
+- Old LIMS stays read-only for max 3 months post go-live — this is the fallback window
+- In that window: study continues on new LIMS; old LIMS used only to retrieve historical records
+- Risk: if migration is not validated by 1 April, APOPO loses access to pre-migration data
+- Mitigation: archived source exports mean original records are always retrievable, independent of LIMS availability
 
 **Visible assumptions (state these explicitly):**
 - Horizon 1 CAPEX assumes source system access is available within 2 weeks of sign-off and source system is not vendor-locked *(open question — see clarifying questions #8)*
