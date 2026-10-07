@@ -1,6 +1,6 @@
 # POC Presentation Plan — APOPO × element61
 **Audience:** Pieter (Head of Training & Research) + likely CEO
-**Format:** Board-ready, 6 slides + optional demo appendix. Situation → Complication → Options → Ask
+**Format:** Board-ready, 6 slides + chatbot demo. Situation → Complication → Options → Ask
 **Constraint:** Must stand alone — Pieter presents to the board without element61 in the room
 **Action item:** Book follow-up meeting with Julie before presentation
 
@@ -60,7 +60,7 @@ flowchart TD
         REPORT["Accuracy KPIs\nProvable 95% → path to 98%"]
         H2["Horizon 2 — Self-service reporting"]
         H3["Horizon 3 — Accuracy improvement"]
-        CHATBOT["AI Chatbot *(optional)*"]
+        CHATBOT["AI Chatbot"]
     end
 
     RATS --> INPUTDQ
@@ -74,7 +74,7 @@ flowchart TD
     TGTLIMS --> REPORT
     TGTLIMS --> H2
     H2 --> H3
-    TGTLIMS -.-> CHATBOT
+    TGTLIMS --> CHATBOT
 
     style INPUT fill:#fff3cd,stroke:#f0ad4e
     style SOURCE fill:#f8d7da,stroke:#dc3545
@@ -82,7 +82,6 @@ flowchart TD
     style TARGET fill:#d4edda,stroke:#28a745
     style MODEL fill:#cce5ff,stroke:#004085
     style TGTLIMS fill:#28a745,color:#fff,stroke:#1e7e34
-    style CHATBOT fill:#e2e3e5,stroke:#6c757d
 ```
 
 ---
@@ -224,9 +223,7 @@ gantt
 
 ---
 
-## Appendix — Chatbot Demo (Optional, Slide 3 Enhancement)
-
-*Use this if time allows and the audience wants a live proof-of-concept. It is not required to land the pitch — the data quality evidence on Slide 2 does that work.*
+## Appendix — Chatbot Demo
 
 **Setup:** Ask a question the board cares about:
 > *"How many TB-positive patients did the rats catch that the clinic missed this year?"*
@@ -247,7 +244,7 @@ gantt
 - [ ] Confirm tooling constraints with APOPO before presentation (Slide 4)
 - [ ] Book follow-up meeting with Julie
 - [ ] Validate slide flow with Pieter before 15:00
-- [ ] Prepare chatbot demo questions as optional appendix material
+- [ ] Prepare chatbot demo questions
 
 ---
 
