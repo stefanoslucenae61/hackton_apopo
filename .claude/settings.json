@@ -1,14 +1,24 @@
 {
-    "env": {
-        "CLAUDE_CODE_USE_FOUNDRY": "1",
-        "ANTHROPIC_FOUNDRY_BASE_URL": "https://aif-e61-dsa-prod.cognitiveservices.azure.com/anthropic",
-        "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6",
-        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5",
-        "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-6"
-    },
-    "enabledPlugins": {},
-    "statusLine": {
-        "type": "command",
-        "command": "bash .claude/statusline.sh"
-    }
+  "env": {
+    "CLAUDE_CODE_USE_FOUNDRY": "1",
+    "ANTHROPIC_FOUNDRY_BASE_URL": "https://aif-e61-dsa-prod.cognitiveservices.azure.com/anthropic",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-6"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git stash *)",
+      "Bash(git push *)",
+      "Bash(\"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" auth token)",
+      "Bash(GH_TOKEN=__CMDSUB_OUTPUT__ 'C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe' pr create --base main --head feat/chatbot --title 'Chatbot PoC: APOPO TB detection AI assistant' --body ' *)",
+      "Bash(git commit -m ' *)",
+      "Bash(GH_TOKEN=$\\(\"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" auth token\\) git push origin feat/chatbot)"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash .claude/statusline.sh"
+  },
+  "enabledPlugins": {}
 }
