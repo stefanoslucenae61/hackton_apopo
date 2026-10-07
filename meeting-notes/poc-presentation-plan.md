@@ -12,6 +12,24 @@
 
 ---
 
+## Assumptions
+
+These assumptions underpin the entire presentation. If any of them are wrong, the recommendation changes. Validate with Pieter before presenting.
+
+| # | Assumption | Risk if wrong |
+|---|-----------|---------------|
+| 1 | **1 January 2027 is a hard deadline.** The new LIMS go-live date is fixed and cannot be pushed. | If the deadline is flexible, the urgency argument weakens. Greenfield becomes a viable option. |
+| 2 | **FDA requires 98% accuracy for approval.** This is the regulatory threshold APOPO is targeting. | If the requirement is different, the gap (and therefore the pitch) changes. |
+| 3 | **APOPO currently achieves ~95% accuracy.** This is the claimed figure — not yet verifiable from reconciled data. | If the true figure is lower (or higher), the framing of the gap and the opportunity shifts. |
+| 4 | **The data to close the gap exists in AutomatedCage and Legacy LIMS.** Reconciling these two systems will produce a dataset from which accuracy can be calculated and defended. | If key historical records are missing or corrupted beyond recovery, a brownfield approach cannot produce a defensible result. |
+| 5 | **Full read access to both source systems can be granted in week 1.** AutomatedCage exports and Legacy LIMS data are accessible and shareable with element61. | Every week of delayed access compresses the review window. At 4 weeks of delay, brownfield is no longer feasible within the timeline. |
+| 6 | **Julie is available during the review phase (weeks 3–8) and has authority to approve field mappings.** Her sign-off is what makes the audit log FDA-defensible. | If Julie is unavailable or her approvals are not considered authoritative, the audit trail loses its value. |
+| 7 | **APOPO's IT/compliance team can confirm approved tooling before kick-off.** The AI reconciliation environment must meet APOPO's data residency and security requirements. | If approval takes weeks, the environment cannot be built in time. |
+| 8 | **Cost estimates ("X days") will be confirmed after source system access.** All CAPEX figures are indicative until element61 can assess data volume and complexity firsthand. | Presenting specific numbers before seeing the data creates expectation risk. Keep ranges until scoping is complete. |
+| 9 | **The old LIMS can remain in read-only mode for up to 3 months after go-live.** This is the safety fallback if something needs to be re-checked post-migration. | If the old LIMS must be decommissioned immediately on 1 January, the fallback disappears and risk increases. |
+
+---
+
 ## Solution Blueprint
 
 ```mermaid
