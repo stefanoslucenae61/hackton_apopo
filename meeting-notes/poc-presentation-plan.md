@@ -8,7 +8,7 @@
 
 ## The One-Sentence Pitch
 
-> APOPO is 3% away from FDA approval and has a hard deadline of 1 January 2027. The answer is in their data — but today there are two systems, neither trusted, and no reconciled source of truth. If the board doesn't decide today, the migration cannot happen in time.
+> APOPO has a fixed LIMS migration deadline of 1 January 2027 and an FDA accuracy target of 98%. The migration will happen — but unless data quality is addressed now, dirty data moves into the new system and the FDA gap stays open. The window to fix it is this project.
 
 ---
 
@@ -18,15 +18,17 @@ These assumptions underpin the entire presentation. If any of them are wrong, th
 
 | # | Assumption | Risk if wrong |
 |---|-----------|---------------|
-| 1 | **1 January 2027 is a hard deadline.** The new LIMS go-live date is fixed and cannot be pushed. | If the deadline is flexible, the urgency argument weakens. Greenfield becomes a viable option. |
+| 1 | **1 January 2027 is a hard deadline.** The new LIMS go-live date is fixed and cannot be pushed. | If the deadline is flexible, the urgency argument weakens and there is more room to choose a slower approach. |
 | 2 | **FDA requires 98% accuracy for approval.** This is the regulatory threshold APOPO is targeting. | If the requirement is different, the gap (and therefore the pitch) changes. |
-| 3 | **APOPO currently achieves ~95% accuracy.** This is the claimed figure — not yet verifiable from reconciled data. | If the true figure is lower (or higher), the framing of the gap and the opportunity shifts. |
-| 4 | **The data to close the gap exists in AutomatedCage and Legacy LIMS.** Reconciling these two systems will produce a dataset from which accuracy can be calculated and defended. | If key historical records are missing or corrupted beyond recovery, a brownfield approach cannot produce a defensible result. |
-| 5 | **Full read access to both source systems can be granted in week 1.** AutomatedCage exports and Legacy LIMS data are accessible and shareable with element61. | Every week of delayed access compresses the review window. At 4 weeks of delay, brownfield is no longer feasible within the timeline. |
-| 6 | **Julie is available during the review phase (weeks 3–8) and has authority to approve field mappings.** Her sign-off is what makes the audit log FDA-defensible. | If Julie is unavailable or her approvals are not considered authoritative, the audit trail loses its value. |
-| 7 | **APOPO's IT/compliance team can confirm approved tooling before kick-off.** The AI reconciliation environment must meet APOPO's data residency and security requirements. | If approval takes weeks, the environment cannot be built in time. |
-| 8 | **Cost estimates ("X days") will be confirmed after source system access.** All CAPEX figures are indicative until element61 can assess data volume and complexity firsthand. | Presenting specific numbers before seeing the data creates expectation risk. Keep ranges until scoping is complete. |
-| 9 | **The old LIMS can remain in read-only mode for up to 3 months after go-live.** This is the safety fallback if something needs to be re-checked post-migration. | If the old LIMS must be decommissioned immediately on 1 January, the fallback disappears and risk increases. |
+| 3 | **APOPO currently achieves ~95% accuracy.** This is the claimed figure — not yet verifiable from the data as it stands today. | If the true figure is lower (or higher), the framing of the gap and the opportunity shifts. |
+| 4 | **The source LIMS is operational until 1 January; the target LIMS already exists but is empty, with different column mappings.** The migration is a column mapping exercise, not a system replacement. | If the target LIMS schema is still changing, the column mapping work has to be redone. Confirm with Aurelium before starting. |
+| 5 | **Aurelium (the IT company managing both LIMS) has a response time of approximately one week.** Any schema clarification, access request, or environment question goes through them. | Aurelium delays cascade directly into the project timeline. Their involvement must be coordinated from day one, not reactively. |
+| 6 | **Full read access to the source LIMS can be arranged through Aurelium in week 1.** Element61 needs the data to begin column mapping and data quality analysis. | Every week of delayed access is a week less for cleaning and review. At 4 weeks of delay, the timeline breaks. |
+| 7 | **Data quality problems exist at two levels: bad input data (ongoing) and dirty historical records (existing).** Both must be addressed — one at the point of entry, one during migration — for FDA accuracy to be achievable. | If only one layer is cleaned, the other will continue to undermine accuracy. The model will be built on a partially clean foundation. |
+| 8 | **Julie is available during the review phase (weeks 3–8) and has authority to approve data quality decisions.** Her sign-off is what makes the audit log FDA-defensible. | If Julie is unavailable or her approvals are not considered authoritative, the audit trail loses its value. |
+| 9 | **APOPO's IT/compliance team can confirm approved tooling before kick-off.** The data quality and migration environment must meet APOPO's data residency and security requirements. | If approval takes weeks, the environment cannot be built in time. |
+| 10 | **Cost estimates ("X days") will be confirmed after source system access.** All CAPEX figures are indicative until element61 can assess data volume and complexity firsthand. | Presenting specific numbers before seeing the data creates expectation risk. Keep ranges until scoping is complete. |
+| 11 | **The source LIMS can remain accessible in read-only mode for a period after go-live.** This is the safety fallback if records need to be re-checked post-migration. | If the source LIMS is decommissioned immediately on 1 January, the fallback disappears and any post-go-live data question cannot be traced back to origin. |
 
 ---
 
@@ -34,45 +36,52 @@ These assumptions underpin the entire presentation. If any of them are wrong, th
 
 ```mermaid
 flowchart TD
-    subgraph SOURCES["Two Sources of Truth (Today — the problem)"]
-        CAGE[("AutomatedCage\nRaw session logs")]
-        LIMS[("Legacy LIMS\nLab + clinic results")]
+    subgraph INPUT["Ongoing data collection"]
+        RATS["Rat sessions\nSniff times · indications · outcomes"]
+        CLINIC["Lab & clinic results"]
+        INPUTDQ["Bad input data\nMissing values · wrong thresholds · unmatched results"]
     end
 
-    subgraph DQ["No reconciliation between them"]
-        DQ1["Missing lab confirmations"]
-        DQ2["Conflicting thresholds"]
-        DQ3["Data integrity flags"]
-        DQ4["No single trusted record"]
+    subgraph SOURCE["Source LIMS\n(operational until 1 Jan)"]
+        SRCLIMS[("Source LIMS\nDirty historical records")]
     end
 
-    subgraph MIGRATE["Brownfield Migration — Horizon 1"]
-        AI["AI Reconciliation Engine\nBulk mapping · Flags edge cases"]
-        ANALYST["Julie approves every mapping\nFull audit log: field · approver · timestamp"]
-        CLEAN[("ONE Source of Truth\nAudit-proof · FDA-compliant · Reconciled")]
+    subgraph DQ["Data Quality Layer — the blocker"]
+        INPUTFIX["Input validation\nClean at the point of entry"]
+        HISTFIX["Historical cleanup\nAI flags · Julie approves · audit log"]
     end
 
-    subgraph OUTPUTS["What it unlocks"]
-        REPORT["Board Reporting\nCost per case · Trends · KPIs"]
-        H2["Horizon 2 — Insight\nSelf-service reporting in hours, not days"]
-        H3["Horizon 3 — Intelligence\nPath to 98% FDA accuracy"]
-        CHATBOT["AI Chatbot *(optional)*\nReliable answers for researchers & auditors"]
+    subgraph TARGET["Target LIMS\n(exists today — empty)"]
+        MAP["Column mapping\nAurelium schema · element61 transformation"]
+        TGTLIMS[("Target LIMS\nClean · mapped · FDA-defensible")]
     end
 
-    SOURCES --> DQ
-    DQ -->|"Today: no one can prove\nthe 95% claim"| AI
-    AI --> ANALYST
-    ANALYST --> CLEAN
-    CLEAN --> REPORT
-    CLEAN --> H2
+    subgraph MODEL["Analytical Model — on top of clean data"]
+        REPORT["Accuracy KPIs\nProvable 95% → path to 98%"]
+        H2["Horizon 2 — Self-service reporting"]
+        H3["Horizon 3 — Accuracy improvement"]
+        CHATBOT["AI Chatbot *(optional)*"]
+    end
+
+    RATS --> INPUTDQ
+    CLINIC --> INPUTDQ
+    INPUTDQ --> SRCLIMS
+    SRCLIMS --> HISTFIX
+    INPUTDQ --> INPUTFIX
+    INPUTFIX --> MAP
+    HISTFIX --> MAP
+    MAP --> TGTLIMS
+    TGTLIMS --> REPORT
+    TGTLIMS --> H2
     H2 --> H3
-    CLEAN -.-> CHATBOT
+    TGTLIMS -.-> CHATBOT
 
-    style SOURCES fill:#fff3cd,stroke:#f0ad4e
+    style INPUT fill:#fff3cd,stroke:#f0ad4e
+    style SOURCE fill:#f8d7da,stroke:#dc3545
     style DQ fill:#f8d7da,stroke:#dc3545
-    style MIGRATE fill:#d4edda,stroke:#28a745
-    style OUTPUTS fill:#cce5ff,stroke:#004085
-    style CLEAN fill:#28a745,color:#fff,stroke:#1e7e34
+    style TARGET fill:#d4edda,stroke:#28a745
+    style MODEL fill:#cce5ff,stroke:#004085
+    style TGTLIMS fill:#28a745,color:#fff,stroke:#1e7e34
     style CHATBOT fill:#e2e3e5,stroke:#6c757d
 ```
 
@@ -83,65 +92,74 @@ flowchart TD
 ### Slide 1 — Situation
 **"APOPO saves lives — but is 3% short of FDA approval and the clock is running."**
 - Rats screen TB samples every working day. 95% accuracy today. FDA requires 98%.
-- The gap can be closed — the historical data is there. But it has never been systematically used.
-- There is a hard deadline: the new LIMS goes live 1 January 2027. That is the migration window. It is fixed.
+- APOPO is already migrating to a new LIMS system. The deadline is fixed: 1 January 2027. The new system already exists — it just needs to be populated.
+- The migration is a known, planned event. What is not yet decided is what arrives in the new system: dirty data or clean data.
 - The board has a concrete decision to make today. Not next month. Today.
 
 ---
 
 ### Slide 2 — Complication
-**"Two systems. Neither trusted. No single source of truth."**
-- APOPO runs two separate data systems that have never been reconciled:
-  - **AutomatedCage** — raw rat session logs (sniff times, indication, threshold)
-  - **Legacy LIMS** — lab and clinic results
-- They don't agree. Nobody has checked row by row. The vendor's own test migration was accepted — but not verified.
-- Concrete evidence from the data:
-  - Missing lab confirmations on clinic-positive samples
-  - Zero or missing indication thresholds
-  - Conflicting rat indications vs. rewarded outcomes
-- **Headline: APOPO cannot today prove its 95% claim to the FDA — because the data that would prove it isn't reconciled.**
+**"The migration is happening. The question is what arrives in the new system."**
+
+The LIMS migration itself is managed by Aurelium — it is a column mapping exercise, source schema to target schema. That part will happen regardless. The problem is the data being migrated.
+
+Data quality is the blocker for FDA approval, and it operates at two levels:
+
+**Level 1 — Bad input data (ongoing)**
+New data is entering the system today with quality problems at the source:
+- Missing lab confirmations on clinic-positive samples
+- Zero or missing indication thresholds
+- Conflicting rat indications vs. rewarded outcomes
+
+If these problems are not fixed at the point of entry, they will keep arriving in the new LIMS after go-live. The migration resets nothing.
+
+**Level 2 — Dirty historical records (existing)**
+The current LIMS contains years of records with accumulated data quality issues. If these migrate as-is, the historical dataset that APOPO would use to prove its 95% accuracy to the FDA will be unverifiable.
+
+**Headline: APOPO can execute a perfect column mapping and still fail the FDA requirement — because the data quality problem lives above the migration layer.**
 
 *This is not a hypothetical risk. This is what element61 found in the first pass of the data.*
 
 ---
 
 ### Slide 3 — Options & Why Brownfield
-**"Three strategies. We considered all of them. Here is why we recommend one."**
+**"Three strategies for handling data quality during the migration. We considered all of them."**
 
-All three strategies can include an AI/agentic component. The difference is the migration approach — and each has a real trade-off:
+The column mapping itself (source schema → target schema) is Aurelium's job. The choice here is about how to handle data quality during that migration — and each approach has a real trade-off:
 
 | Strategy | What it means | Pro | Con | FDA audit-proof | Weeks to Jan 1 |
 |----------|--------------|-----|-----|-----------------|----------------|
-| **Lift & shift** | Copy data as-is into new LIMS, reconcile later | Fastest. Lowest upfront effort. | Dirty data moves with you. The problem follows you into the new system. | No | 4–6 w ✓ |
-| **Greenfield** | Redesign schema from scratch, repopulate manually | Cleanest possible result. Maximum control. | Misses the January deadline. Too slow for this window. | Yes | 16–20 w ✗ |
-| **Brownfield** | Reshape and reconcile existing data into the new schema using AI | Hits the deadline *and* produces clean, defensible data. Julie approves every edge case — full audit log. | Requires Julie's time during migration. Requires source system access from day one. | **Yes** | 10–12 w ✓ |
+| **Lift & shift** | Migrate data as-is, address quality after go-live | Fastest. Least disruption to Aurelium's timeline. | Dirty data arrives in the new system. Post-go-live cleanup is harder, slower, and not audit-defensible. | No | 4–6 w ✓ |
+| **Greenfield** | Rebuild the dataset from scratch using source documents | Maximum control. Cleanest possible result. | Far too slow for the January deadline. Requires re-entry of years of records. | Yes | 16–20 w ✗ |
+| **Brownfield** | Clean and validate data in-flight, during the migration window | Hits the deadline *and* produces a clean, auditable dataset. AI handles bulk; Julie approves edge cases. | Requires Julie's time. Requires Aurelium access from week one. | **Yes** | 10–12 w ✓ |
 
 **Why Brownfield:**
-- Lift & shift is fast but kicks the problem down the road — APOPO would enter the new LIMS with the same data quality issues, just in a different system. The FDA risk doesn't disappear; it gets harder to fix post-migration.
-- Greenfield is the right answer with unlimited time. APOPO does not have unlimited time.
-- Brownfield is the only option that meets the January 1 deadline *and* gives APOPO a defensible, reconciled data set. The AI handles the bulk; Julie handles the judgment calls. Every decision is logged.
+- **Lift & shift** solves the migration but not the problem. The dirty data moves with you — it just becomes someone else's problem to fix in the new system, post-go-live, without an audit trail. The FDA still cannot be given a defensible dataset.
+- **Greenfield** is the right answer with unlimited time. APOPO has 12 weeks, not 20.
+- **Brownfield** treats the migration window as the opportunity to clean: the AI processes records in bulk, flags what it cannot resolve, and Julie reviews the edge cases. Every decision is logged with field, approver, and timestamp. The result is a clean, traceable dataset that goes into the new LIMS on day one.
 
-**What the AI specifically does in Brownfield:**
-- Maps fields from AutomatedCage and Legacy LIMS to the new schema in bulk
-- Flags records it cannot confidently map (conflicts, missing values, ambiguous thresholds)
-- Generates a review queue for Julie — she approves, rejects, or overrides each flag
-- Every action is written to an immutable audit log: field, decision, approver, timestamp
-- Original source exports are archived unchanged — always retrievable, independent of LIMS
+**What the AI specifically does:**
+- Validates incoming data against defined quality rules (flags missing values, threshold anomalies, conflicting outcomes)
+- Maps historical records from source to target schema, flagging records it cannot confidently handle
+- Generates a review queue for Julie — she approves, rejects, or overrides
+- Writes every decision to an immutable audit log
+- Archives original source exports unchanged — always retrievable, independent of LIMS
 
 ---
 
 ### Slide 4 — What We Need From APOPO
-**"This only works if APOPO commits three things from day one."**
+**"This only works if APOPO commits four things from day one."**
 
-The Brownfield approach is not a black box. Element61 cannot reconcile data it cannot see, and Julie cannot approve mappings she is not available for. These are not optional:
+Element61 adds the data quality and analytical layer on top of the migration. Aurelium handles the column mapping. For these two workstreams to run in parallel without blocking each other, APOPO must coordinate both:
 
 | Commitment | Why it's critical | When needed |
 |-----------|-------------------|-------------|
-| **Full read access to both source systems** (AutomatedCage export + Legacy LIMS) | The AI cannot map what it cannot read. Access delays compress the migration window directly — every week of delay is a week less for Julie to review. | Week 1 (kick-off week) |
-| **Julie's dedicated time for mapping review** | Julie is the domain expert. She is the only person who can validate ambiguous cases. The audit log is only FDA-defensible if approvals are real and timely. | Weeks 3–8 (review phase) |
-| **Confirmation of approved tooling** (cloud environment, data residency constraints, AI vendor) | The AI reconciliation engine runs somewhere. APOPO's IT/compliance team needs to confirm what is permitted before element61 builds the environment. | Week 1 |
+| **Aurelium introduction and read access to the source LIMS** | Element61 needs schema documentation and data access to begin quality analysis and transformation. Aurelium's ~1-week response time means this request cannot wait — every week of delay is a week less for cleaning and review. | Week 1 (kick-off week) |
+| **Alignment with Aurelium on the target schema** | The column mapping is Aurelium's domain. Element61 needs to understand the target structure to design the data quality and transformation rules correctly. A schema that changes mid-project means rework. | Week 1 |
+| **Julie's dedicated time for data quality review** | Julie is the domain expert. She is the only person who can validate ambiguous cases — conflicting outcomes, missing values, edge cases the AI flags. The audit log is only FDA-defensible if her approvals are real and documented. | Weeks 3–8 (review phase) |
+| **Confirmation of approved tooling** (cloud environment, data residency, AI vendor) | The quality engine runs somewhere. APOPO's IT/compliance team needs to confirm what is permitted before element61 builds the environment. | Week 1 |
 
-**If any of these slip, the timeline slips with them.** At 4 weeks of delay, Brownfield is no longer feasible and the choice becomes Lift & shift (with dirty data) or missing the go-live date.
+**If any of these slip, the timeline slips with them.** At 4 weeks of delay, Brownfield is no longer feasible and APOPO faces a binary choice: migrate dirty data (FDA risk) or miss the go-live date (study risk).
 
 ---
 
@@ -152,23 +170,26 @@ The Brownfield approach is not a black box. Element61 cannot reconcile data it c
 gantt
     title Decision Today vs Decision Delayed
     dateFormat  YYYY-MM-DD
-    section Decision Today
-    Kick-off & source access           :h1a, 2026-10-08, 1w
-    Brownfield migration + audit log   :h1b, 2026-10-15, 7w
-    Julie review & sign-off            :h1c, 2026-11-15, 3w
-    KPI baseline + validation          :h1d, 2026-12-01, 4w
-    DEADLINE — new LIMS go-live        :milestone, 2027-01-01, 0d
-    Old LIMS read-only fallback        :h1e, 2027-01-01, 12w
+    section Decision Today — element61
+    Kick-off · Aurelium intro · schema alignment  :h1a, 2026-10-08, 1w
+    Input validation rules + historical cleanup   :h1b, 2026-10-15, 7w
+    Julie review & sign-off                       :h1c, 2026-11-15, 3w
+    Analytical model + KPI validation             :h1d, 2026-12-01, 4w
+    section Decision Today — Aurelium
+    Column mapping source to target               :a1, 2026-10-08, 8w
+    UAT & go-live prep                            :a2, 2026-12-01, 4w
+    DEADLINE — new LIMS go-live                   :milestone, 2027-01-01, 0d
+    Source LIMS read-only fallback                :h1e, 2027-01-01, 12w
     section Decision Delayed
-    Every week of delay shifts deadline:crit, delay, 2026-10-08, 4w
-    Migration window too short         :crit, 2026-11-01, 8w
-    LIMS goes live with unverified data:milestone, crit, 2027-01-01, 0d
-    FDA audit risk                     :crit, 2027-01-01, 12w
+    Every week of delay shifts all downstream     :crit, delay, 2026-10-08, 4w
+    Cleanup window too short for Julie review     :crit, 2026-11-01, 8w
+    LIMS goes live with unverified data           :milestone, crit, 2027-01-01, 0d
+    FDA audit risk                                :crit, 2027-01-01, 12w
 ```
 
-**If the decision is made today:** Kick-off this week → migration done by mid-December → KPIs validated → new LIMS goes live clean on 1 January. Old LIMS stays read-only for 3 months as a safety fallback — original records are never lost.
+**If the decision is made today:** Kick-off this week → element61 and Aurelium run in parallel → data arrives clean in the new LIMS → analytical model built on verified records → new LIMS goes live on 1 January with a defensible dataset. Source LIMS stays accessible as a read-only fallback for 3 months.
 
-**If the decision is delayed:** Every week of delay compresses the review window. At 4 weeks delay, Brownfield is no longer feasible. APOPO either goes live with unverified data (FDA risk) or misses the go-live date entirely (study risk).
+**If the decision is delayed:** Every week of delay compresses the Julie review window. At 4 weeks of delay, Brownfield is no longer feasible. APOPO faces a binary choice: migrate dirty data (FDA risk) or miss the go-live date (study risk).
 
 ---
 
@@ -179,9 +200,10 @@ gantt
 
 | Dimension | Today | After Horizon 1 |
 |-----------|-------|-----------------|
-| **Data** | Two unreconciled systems, no single source of truth | One audit-proof source of truth, FDA-defensible |
-| **Reporting** | Manual, ad-hoc, built by hand | Automated KPI baseline |
-| **FDA readiness** | Cannot prove 95% claim from current data | Full audit log, reconciled records, defensible |
+| **Data quality** | Bad input data entering the system daily; years of dirty historical records | Input validation rules in place; historical records cleaned and audited |
+| **Migration** | Source LIMS operational; target LIMS empty; Aurelium mapping in progress | Target LIMS populated with clean, verified data — go-live ready |
+| **Analytical model** | No model on top of the data; accuracy calculated manually | Model built on clean data; KPIs automated |
+| **FDA readiness** | Cannot prove 95% claim from current records | Full audit log, cleaned dataset, defensible accuracy figure |
 
 **Cost framing** *(ranges — final scoping after source system access confirmed)*:
 
@@ -195,9 +217,9 @@ gantt
 
 > **If the board approves Horizon 1 today, element61 can kick off this week and hit the 1 January deadline. If not, the window closes.**
 
-- **Decision:** approve Horizon 1 (brownfield migration + audit trail) as a fixed-scope engagement
-- **What APOPO commits:** source system access this week, Julie's time for mapping approvals, confirmation of approved tooling
-- **What element61 commits:** one reconciled source of truth, FDA-defensible audit log — delivered by 1 January
+- **Decision:** approve Horizon 1 (data quality layer + brownfield transformation + analytical model) as a fixed-scope engagement
+- **What APOPO commits:** Aurelium introduction and source access this week, Julie's time for data quality review, confirmation of approved tooling
+- **What element61 commits:** clean data in the target LIMS by go-live, analytical model on top, FDA-defensible audit log — delivered by 1 January
 - **Next step:** sign today → kick-off call tomorrow
 
 ---
@@ -233,10 +255,11 @@ gantt
 
 | Objection | Response |
 |-----------|----------|
-| "We already have 95% — why act now?" | You can't prove it from current data. The FDA requires a defensible audit trail, not a claim. And the deadline is January 1 — there is no later. |
-| "This sounds expensive." | Horizon 1 runs at €500–€1k/month. The cost of a failed FDA audit or a missed LIMS go-live is orders of magnitude higher — and Julie's time is not free either. |
-| "Why not just lift-and-shift? It's faster." | It is faster — but the data quality problem doesn't disappear. It moves with you into the new system. You'd be starting the FDA approval process with the same unverifiable records, just in a different tool. Julie has flagged this as unacceptable. |
-| "Why not greenfield?" | Greenfield would give you the cleanest possible result. But it takes 16–20 weeks. You have 12. Brownfield gives you most of the benefit at a fraction of the time. |
-| "What if we're not ready by January 1?" | Old LIMS stays read-only for 3 months as a fallback. Original source exports are always archived — records are never lost. But the goal is to not need the fallback. |
-| "Can't Julie fix the data herself?" | Julie knows the data better than anyone — that's exactly why she should be approving decisions, not doing ETL. The AI handles the bulk mapping; she handles the judgment calls. That's the right use of her expertise. |
-| "What do you need from us?" | Three things: source system access in week one, Julie's time during the review phase, and confirmation of your approved tooling. Without those, the timeline cannot hold. |
+| "We already have 95% — why act now?" | You can't prove it from current data. The FDA requires a defensible audit trail, not a claim. And the LIMS migration is happening either way — this is about what quality of data arrives in the new system. |
+| "Isn't the migration Aurelium's job?" | The column mapping is Aurelium's job. Data quality is not. Aurelium will faithfully move whatever is in the source LIMS — including the dirty records. Element61's role is the layer above: validating input, cleaning history, building the model. These are parallel workstreams, not competing ones. |
+| "Why not just lift-and-shift and clean up after?" | The data quality problem doesn't disappear post-migration. It becomes harder to fix — the audit trail is weaker, the source is harder to trace, and the FDA clock is still running. Cleaning before go-live is always cheaper than cleaning after. |
+| "Why not greenfield?" | Greenfield would give the cleanest possible result. But it takes 16–20 weeks. The window is 12. Brownfield delivers most of the benefit within the available time. |
+| "This sounds expensive." | Horizon 1 runs at €500–€1k/month. The cost of a failed FDA audit, a missed go-live, or continued manual fire-fighting by Julie is orders of magnitude higher. |
+| "What if we're not ready by January 1?" | Source LIMS stays read-only for a period after go-live as a fallback. Original records are always archived — nothing is ever lost. But the goal is to not need the fallback. |
+| "Can't Julie fix the data herself?" | Julie knows the data better than anyone — that's exactly why she should be approving decisions, not doing ETL. The AI handles the bulk; she handles the judgment calls. That's the right use of her expertise. |
+| "What do you need from us?" | Four things: an introduction to Aurelium and source access in week one, schema alignment with Aurelium before we build, Julie's time during the review phase, and confirmation of approved tooling. Without those four, the timeline cannot hold. |
