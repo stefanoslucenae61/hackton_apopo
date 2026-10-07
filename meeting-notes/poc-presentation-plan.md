@@ -98,16 +98,56 @@ flowchart TD
 - Agentic migration differentiator: the same AI that powers the chatbot also flags and proposes fixes for dirty records — analysts confirm, not re-do.
 - KPI commitment: 100% records reconciled, identical KPIs before and after, zero study downtime.
 
-### Slide 5 — Roadmap (Goal 4)
-**"Three horizons. One number per horizon. You decide the pace."**
+### Slide 5a — Maturity Snapshot (Goal 4)
+**"Here is where APOPO stands today — honestly."**
 
-| Horizon | Name | What it unlocks | Timeline | CAPEX estimate |
-|---------|------|-----------------|----------|----------------|
-| 1 | Foundation | Trusted, audit-proof data. Chatbot works reliably. | 0–3 months | €X–€Y |
-| 2 | Insight | Self-service reporting for researchers, auditors, donors. | 3–9 months | €X–€Y |
-| 3 | Intelligence | AI-driven accuracy improvement (rejection threshold, committee of rats). Path to 98%. | 9–18 months | €X–€Y |
+| Dimension | Today | What's missing |
+|-----------|-------|----------------|
+| **Data** | Multiple siloed sources (AutomatedCage, legacy LIMS, clinic exports). No single source of truth. Records not reconciled. | Unified, audit-proof data model |
+| **Reporting** | Manual, ad-hoc. No self-service. Board and donor reports built by hand. | Automated, audience-specific reporting |
+| **AI** | None in production. PoC chatbot built this week — shows what's possible and where data blocks it. | Reliable AI requiring clean foundation first |
 
-Running cost: targeted at APOPO's stated budget ceiling of **€1,000/month** for Horizon 1.
+Framing for the board: *"This is not a criticism — it's a baseline. Every organisation starts here. The question is what it costs to stay here vs. move forward."*
+
+---
+
+### Slide 5b — Roadmap (Goal 4)
+**"Three horizons. One decision unlocks the next. You set the pace."**
+
+```mermaid
+gantt
+    title APOPO × element61 Roadmap
+    dateFormat  YYYY-MM
+    section Horizon 1 · Foundation
+    Agentic migration & data model     :h1a, 2026-10, 2m
+    Chatbot production-ready           :h1b, 2026-11, 1m
+    Audit-proof KPI baseline           :h1c, 2026-11, 1m
+    section Horizon 2 · Insight
+    Self-service reporting (Power BI)  :h2a, 2027-01, 3m
+    Donor & audit report automation    :h2b, 2027-02, 3m
+    section Horizon 3 · Intelligence
+    Rejection threshold optimisation   :h3a, 2027-07, 3m
+    Committee of rats analysis         :h3b, 2027-08, 3m
+    Path to 98% accuracy (FDA)         :h3c, 2027-09, 3m
+```
+
+| Horizon | Name | What the board gets | Timeline | CAPEX (est.) | OPEX / month |
+|---------|------|---------------------|----------|--------------|--------------|
+| **1** | **Foundation** | Trusted data. Chatbot answers reliably. KPIs the board can stand behind. | Oct – Dec 2026 | €15k – €25k | €500 – €1k |
+| **2** | **Insight** | Self-service reporting for researchers, auditors, donors. Reports in hours, not days. | Jan – Jun 2027 | €20k – €35k | €1k – €2k |
+| **3** | **Intelligence** | AI-driven accuracy improvement. Rejection threshold tuning. Committee of rats. Path to FDA 98%. | Jul 2027 – Mar 2028 | €30k – €50k | €2k – €3.5k |
+
+**Visible assumptions (state these explicitly):**
+- Horizon 1 CAPEX assumes source system access is available within 2 weeks of sign-off and source system is not vendor-locked *(open question — see clarifying questions #8)*
+- OPEX is cloud compute + storage only; element61 support billed separately if ongoing
+- Horizon 1 timeline assumes the December deadline is end of December; shifts if earlier
+- Costs are ranges — lower bound assumes clean handover of data and clear requirements; upper bound covers ambiguity and rework
+- Horizons 2 and 3 are indicative; scoped in detail after Horizon 1 delivers
+
+**3-year total cost of ownership (indicative):**
+- Low scenario: €65k CAPEX + €54k OPEX = **~€120k over 3 years**
+- High scenario: €110k CAPEX + €126k OPEX = **~€235k over 3 years**
+- Cost of *not* acting: every year without clean data = Julie's time on fire-fighting + unverifiable 95% claim + donor risk
 
 ### Slide 6 — The Ask
 **"One decision today unlocks everything else."**
@@ -146,6 +186,6 @@ The chatbot demo in Slide 3 should follow this flow — rehearse it:
 | Objection | Response |
 |-----------|----------|
 | "We already have 95% accuracy — why invest now?" | Because you can't prove it from your current data. And the 3% gap to FDA costs more to close the longer you wait. |
-| "This sounds expensive." | Horizon 1 is €X, runs at €1k/month. The cost of one missed TB case — clinically and reputationally — is orders of magnitude higher. |
+| "This sounds expensive." | Horizon 1 is €15k–€25k, runs at €500–€1k/month. The cost of one missed TB case — clinically and reputationally — is orders of magnitude higher. |
 | "Can't we just fix the data ourselves?" | Julie knows the data; she shouldn't spend her time on ETL. Agentic migration does it faster, with an audit trail, and frees her for research. |
 | "What if the migration breaks something?" | That's the point of the PoC: we've already run your data and shown what breaks. Horizon 1 fixes it with zero study downtime as a KPI. |
